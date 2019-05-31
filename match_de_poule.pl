@@ -13,6 +13,7 @@ open F,$file or die "impossible d'ouvrir $file\n";
 while (<F>)
 {
     next unless /[a-z]/;
+    next if /#/;
     chomp $_;
     s/;.*$//;
     push @eq,$_;
@@ -32,3 +33,4 @@ for ($i=0;$i<$nb;$i++)
     }
 }
 close F;
+

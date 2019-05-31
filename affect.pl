@@ -2,7 +2,8 @@
 
 use List::Util 'shuffle';
 
-$verbose=1;
+$verbose=0;
+$fo=$fc='';
 
 while ($#ARGV>=0)
 {
@@ -29,19 +30,27 @@ while ($#ARGV>=0)
 	$fsm=shift @ARGV;
 	$flag_sauve_ordre=1;
     }
+    elsif ($cmd eq '-o')
+    {
+	$fo=shift @ARGV;
+    }
+    elsif ($cmd eq '-c')
+    {
+	$fc=shift @ARGV;
+    }
     elsif ($cmd eq '-v')
     {
 	$verbose++;
     }
     else
     {
-	die "Usage : $0 [ -lm fichier_d_ordre_de_matches_a_charger ] [ -sm fichier_ordre_matches_a_sauver] [-v] \n";
+	die "Usage : $0 [ -lm fichier_d_ordre_de_matches_a_charger ] [ -sm fichier_ordre_matches_a_sauver ] [ -o fichier_sortie_matches_par_creneaux ] [ -c fichier_sortie_creneaux ] [-v] \n";
     }
 }
 
 # lecture toutes salles
 
-print "======================================== lecture salles ========================================\n" if $verbose;
+print "======================================== lecture salles ========================================\n" if $verbose > 1;
 @salles=`ls -1 t_*csv`;
 foreach $salle (@salles)
 {
@@ -50,12 +59,12 @@ foreach $salle (@salles)
     $s=$salle;
     $s=~s/^t_//;
     $s=~s/\.csv$//;
-    print "- lecture $salle ($s)\n" if $verbose;
+    print "- lecture $salle ($s)\n" if $verbose > 2;
     while (<F>)
     {
 	next unless /[0-9]/;
 	($c,$mins,$hhmm,$r)=split ';',$_;
-	print "  creneau $c (a $mins min) => $hhmm\n" if $verbose>1;
+	print "  creneau $c (a $mins min) => $hhmm\n" if $verbose>3;
 	$ht_mins{$mins}=[] unless exists $ht_mins{$mins};
 	push @{$ht_mins{$mins}},$s;
     }
@@ -63,16 +72,22 @@ foreach $salle (@salles)
 }
 
 # rangement par creneau horaire
+open FC,">$fc" unless $fc eq '';
 %ht_aff_creneau=();
 @minss=sort keys %ht_mins;
+# nb max de salles par creneau
+$maxspc=0;
 $nb_total_creneaux=0;
 foreach $mins (@minss)
 {
     $ht_aff_creneau{$mins}=[];
     $nb_matches_restant_sur_creneau{$mins}=$ht_nb{$mins}=$#{$ht_mins{$mins}}+1;
     $nb_total_creneaux+=$ht_nb{$mins};
-    print "- a $mins, ",$ht_nb{$mins}," salles dispo = ",join(',',@{$ht_mins{$mins}}),"\n" if $verbose;
+    $maxspc=$ht_nb{$mins} if $ht_nb{$mins}>$maxspc;
+    print "- a $mins, ",$ht_nb{$mins}," salles dispo = ",join(',',@{$ht_mins{$mins}}),"\n" if $verbose >1;
+    print FC $mins,';',$ht_nb{$mins},';',join(';',@{$ht_mins{$mins}}),";\n";
 }
+close FC unless $fc eq '';
 
 goto trait if $skip_poules;
 print "======================================== lecture matches ========================================\n" if $verbose;
@@ -89,7 +104,7 @@ foreach $fmatch (@fmatches)
     {
 	next unless /[0-9]/;
 	($n,$e1,$e2,$r)=split ';',$_;
-	print "poule $p : $e1 contre $e2\n" if $verbose;
+	print "poule $p : $e1 contre $e2\n" if $verbose > 2;
 	$nom_match="$p;$e1;$e2;";
 	push @t_matches,$nom_match;
 	$ht_m_restants{$nom_match}=1;
@@ -111,7 +126,7 @@ if ($flag_sauve_ordre)
 }
 
 trait:
-    print "======================================== traitement matches ========================================\n" if $verbose;
+    print "======================================== traitement matches ========================================\n" if $verbose > 1;
 # init
 $passe=1;
 %ht_eq_joue_deja=();
@@ -125,7 +140,7 @@ while ((keys %ht_m_restants)+0>0)
     foreach $match (@sk_m_restants)
     {
 	($p,$e1,$e2,$r)=split /;/,$match;
-	print "  - essai sur $e1 vs $e2 dans $p\n" if $verbose;
+	print "  - essai sur $e1 vs $e2 dans $p\n" if $verbose > 1;
 	# on itère sur les créneaux dispos
 	$omins=0;
 	foreach $mins (@minss)
@@ -152,7 +167,7 @@ while ((keys %ht_m_restants)+0>0)
 			$ht_eq_joue_deja{"$p;$e1;$mins"}=1;
 			$ht_eq_joue_deja{"$p;$e2;$mins"}=1;
 			# debug
-			print "    => sur creneau $mins\n" if $verbose;
+			print "    => sur creneau $mins\n" if $verbose > 1 ;
 			# sortie de la boucle créneau
 			last;
 		    }
@@ -174,3 +189,25 @@ while ((keys %ht_m_restants)+0>0)
     last if $passe>2;
 }
 
+# sortie des matches par creneau
+unless ($fo eq '')
+{
+    open (F,">$fo");
+    foreach $mins (@minss)
+    {
+	print F "$mins;";
+	$i=0;
+	foreach $match (@{$ht_aff_creneau{$mins}})
+	{
+	    ($p,$e1,$e2,$r)=split /;/,$match;
+	    print F "$e1 - $e2 ($p);";
+	    $i++;
+	}
+	for (;$i<$maxspc;$i++)
+	{
+	    print F ";";
+	}
+	print F "\n";
+    }
+    close F;
+}
