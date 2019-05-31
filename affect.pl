@@ -4,6 +4,41 @@ use List::Util 'shuffle';
 
 $verbose=1;
 
+while ($#ARGV>=0)
+{
+    $cmd=shift @ARGV;
+    # rechargement d'une config retenue sur l'ordre des matches pour que ça rentre
+    if ($cmd eq '-lm')
+    {
+	$flm=shift @ARGV;
+	open (LM,$flm);
+	while (<LM>)
+	{
+	    next unless /[a-zA-Z]/;
+	    ($p,$e1,$e2,$r)=split ';',$_;
+	    $nom_match="$p;$e1;$e2;";
+	    push @t_matches,$nom_match;
+	    $ht_m_restants{$nom_match}=1;
+	}
+	@sk_m_restants=@t_matches;
+	close LM;
+	$skip_poules=1;
+    }
+    elsif ($cmd eq '-sm')
+    {
+	$fsm=shift @ARGV;
+	$flag_sauve_ordre=1;
+    }
+    elsif ($cmd eq '-v')
+    {
+	$verbose++;
+    }
+    else
+    {
+	die "Usage : $0 [ -lm fichier_d_ordre_de_matches_a_charger ] [ -sm fichier_ordre_matches_a_sauver] [-v] \n";
+    }
+}
+
 # lecture toutes salles
 
 print "======================================== lecture salles ========================================\n" if $verbose;
@@ -39,6 +74,7 @@ foreach $mins (@minss)
     print "- a $mins, ",$ht_nb{$mins}," salles dispo = ",join(',',@{$ht_mins{$mins}}),"\n" if $verbose;
 }
 
+goto trait if $skip_poules;
 print "======================================== lecture matches ========================================\n" if $verbose;
 # lecture tous matches
 @fmatches=`ls -1 m_*csv`;
@@ -61,8 +97,21 @@ foreach $fmatch (@fmatches)
     close F;
 }
 print "$nb_total_creneaux creneaux pour ",(keys %ht_m_restants)+0," matches\n" if $verbose;
+# rangement aléatoire des matches
+@sk_m_restants=shuffle keys %ht_m_restants;
+# sortie de l'ordre des matches
+if ($flag_sauve_ordre)
+{
+    open F,">$fsm";
+    foreach $m (@sk_m_restants)
+    {
+	print F "$m\n";
+    }
+    close F;
+}
 
-print "======================================== traitement matches ========================================\n" if $verbose;
+trait:
+    print "======================================== traitement matches ========================================\n" if $verbose;
 # init
 $passe=1;
 %ht_eq_joue_deja=();
@@ -72,8 +121,8 @@ $passe=1;
 while ((keys %ht_m_restants)+0>0)
 {
     print "- passe $passe : reste ",(keys %ht_m_restants)+0," matches à ventiller \n" if $verbose;
-    # on itère sur tous les matches
-    foreach $match (shuffle keys %ht_m_restants)
+    # on itère sur tous les matches rangés au hasard
+    foreach $match (@sk_m_restants)
     {
 	($p,$e1,$e2,$r)=split /;/,$match;
 	print "  - essai sur $e1 vs $e2 dans $p\n" if $verbose;
@@ -115,6 +164,13 @@ while ((keys %ht_m_restants)+0>0)
     }
     print "- fin passe $passe : ",(keys %ht_m_restants)+0," matches à ventiller \n\n" if $verbose;
     $passe++;
+    # reconstitution de la liste des matches à traiter à partir de l'ordre aléatoire initial et de ce qu'il reste ds la table de hash
+    @sk2=();
+    foreach $m (@sk_m_restants)
+    {
+	push @sk2,$m if exists ($ht_m_restants{$m});
+    }
+    @sk_m_restants=@sk2;
     last if $passe>2;
 }
 
