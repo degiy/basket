@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use POSIX;
+
 $verbose=1;
 
 # recup ordre des salles
@@ -142,6 +144,7 @@ foreach $mins (@minss)
 		    $mp=shift @{$htmpp{$p}};
 		    print "$mp\n" if $verbose > 1;
 		    delete $htmsc{$mp};
+		    $htsalle{$salle}{$mins}=$mp;
 		    goto prochaine_salle;
 		}
 	    }
@@ -154,9 +157,11 @@ foreach $mins (@minss)
 	    $mp=shift @ms;
 	    print "$mp\n" if $verbose > 1;
 	    delete $htmsc{$mp};
+	    $htsalle{$salle}{$mins}=$mp;
 	}
 	else
 	{
+	    $htsalle{$salle}{$mins}='-';
 	    print " => pas de match pour cette salle\n" if $verbose>1;
 	}
       prochaine_salle:
@@ -168,6 +173,24 @@ foreach $mins (@minss)
     }
 }
 
+open F,">tableau.csv";
+@salles=keys %htsalle;
+@salless=&ordre_salles(@salles);
+print F "creneau;",join(';',@salless),";\n";
+foreach $mins (@minss)
+{
+    $hh=floor($mins/60);
+    $mm=$mins-$hh*60;
+    printf F "%02d:%02d;",$hh,$mm;
+    foreach $salle (@salless)
+    {
+	$mp=$htsalle{$salle}{$mins};
+	print F $mp,";";
+    }
+    print F "\n";
+}
+close F;
+    
 sub ordre_salles
 {
     my @t=@_;
