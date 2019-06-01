@@ -1,0 +1,4 @@
+./gen.sh
+./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv
+./affect.pl -lm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv
+./choix_salles.pl  -i ./matches_sur_creneaux.csv -c creneaux.csv -v -v -v
