@@ -78,6 +78,8 @@ open F, "grep '^#pref' p_*csv |";
 %htp=();
 while (<F>)
 {
+    # p_u9a.csv:#pref t5;t6;
+    s/^p_//;
     s/.csv:#pref /;/;
     print "pref line = --",$_,"--\n" if $verbose>1;
     @t=split /;/;
@@ -126,27 +128,36 @@ foreach $mins (@minss)
 	if (exists $htp{$salle})
 	{
 	    # priorité pour cette salle
-	    $i=1;
-	    while (exists $htp{$salle}{$i})
+	    print " (priorités ",join(',',sort keys %{$htp{$salle}}),") " if $verbose>2;
+	    foreach $i (sort keys %{$htp{$salle}})
 	    {
 		# liste des poules au rang de priorité i
-		foreach $pp (@{$htp{$salle}{$i}})
+		foreach $p (@{$htp{$salle}{$i}})
 		{
+		    print " [ rg $i : $p ? ] " if $verbose>3;
+		    print " { hash ",$htmpp{$p}," [0] ",$htmpp{$p}[0]," } "if $verbose>4;
 		    # poule prioritaire pp, a-t-on un match ds cette poule sur le créneau ?
-		    next unless (exists $htmpp{$p}) && ($#{$htmpp{$p}}>0);
+		    next unless (exists $htmpp{$p}) && (exists $htmpp{$p}[0]);
 		    # ok a des des matches de cette poule sur le créneau
 		    $mp=shift @{$htmpp{$p}};
 		    print "$mp\n" if $verbose > 1;
 		    delete $htmsc{$mp};
 		    goto prochaine_salle;
 		}
-		$i++;
 	    }
+	    print " (echec prios) " if $verbose>2;
+	}
+	# pas de priorité pour cette salle (ou echec sur les prio), on prend le premier match dispo
+	@ms=keys %htmsc;
+	if ($#ms>=0)
+	{
+	    $mp=shift @ms;
+	    print "$mp\n" if $verbose > 1;
+	    delete $htmsc{$mp};
 	}
 	else
 	{
-	    # pas de priorité pour cette salle
-	    
+	    print " => pas de match pour cette salle\n" if $verbose>1;
 	}
       prochaine_salle:
     }
