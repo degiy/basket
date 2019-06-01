@@ -2,10 +2,15 @@
 
 # script de creation de creneaux sur une salle
 
-$#ARGV==-1 and die "$0 -s <nom_de_salle> -p <periode_entre_2_creneaux_en_min> -d <hh:mm> -f <hh:mm> -d -f ... -t \n";
+sub fin
+{
+    die "$0 -s <nom_de_salle> -p <periode_entre_2_creneaux_en_min> -d <hh:mm> -f <hh:mm> -d -f ... -t -prio <priorite_traitement>\n";
+}
 
+$#ARGV==-1 and &fin;
 # creneau
 $c=1;
+$prio=99;
 
 while ($#ARGV>=0)
 {
@@ -18,6 +23,10 @@ while ($#ARGV>=0)
     elsif ($cmd eq '-p')
     {
 	$periode=shift @ARGV;
+    }
+    elsif ($cmd eq '-prio')
+    {
+	$prio=shift @ARGV;
     }
     elsif ($cmd eq '-d')
     {
@@ -33,8 +42,12 @@ while ($#ARGV>=0)
 	# trou
 	print F ";;\n";
     }
+    else
+    {
+	&fin;
+    }
 }
-
+print F ";;\n#prio $prio;;\n";
 close F;
 
 

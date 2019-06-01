@@ -63,6 +63,7 @@ foreach $salle (@salles)
     while (<F>)
     {
 	next unless /[0-9]/;
+	next if /#/;
 	($c,$mins,$hhmm,$r)=split ';',$_;
 	print "  creneau $c (a $mins min) => $hhmm\n" if $verbose>3;
 	$ht_mins{$mins}=[] unless exists $ht_mins{$mins};
@@ -103,6 +104,7 @@ foreach $fmatch (@fmatches)
     while (<F>)
     {
 	next unless /[0-9]/;
+	next if /#/;
 	($n,$e1,$e2,$r)=split ';',$_;
 	print "poule $p : $e1 contre $e2\n" if $verbose > 2;
 	$nom_match="$p;$e1;$e2;";
