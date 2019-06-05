@@ -138,14 +138,19 @@ foreach $mins (@minss)
 		{
 		    print " [ rg $i : $p ? ] " if $verbose>3;
 		    print " { hash ",$htmpp{$p}," [0] ",$htmpp{$p}[0]," } "if $verbose>4;
-		    # poule prioritaire pp, a-t-on un match ds cette poule sur le créneau ?
-		    next unless (exists $htmpp{$p}) && (exists $htmpp{$p}[0]);
-		    # ok a des des matches de cette poule sur le créneau
-		    $mp=shift @{$htmpp{$p}};
-		    print "$mp\n" if $verbose > 1;
-		    delete $htmsc{$mp};
-		    $htsalle{$salle}{$mins}=$mp;
-		    goto prochaine_salle;
+		    # poule prioritaire p, a-t-on un match ds cette poule sur le créneau ?
+		    next unless exists $htmpp{$p};
+		    # ok a des des matches de cette poule sur le créneau, on itère
+		    foreach $mp (@{$htmpp{$p}})
+		    {
+			# on passe si le match a déjà été affecté
+			next unless exists $htmsc{$mp};
+			# sinon on a un client
+			print "$mp\n" if $verbose > 1;
+			delete $htmsc{$mp};
+			$htsalle{$salle}{$mins}=$mp;
+			goto prochaine_salle;
+		    }
 		}
 	    }
 	    print " (echec prios) " if $verbose>2;
@@ -173,23 +178,49 @@ foreach $mins (@minss)
     }
 }
 
+# generation des tableaux
+# F : basique (juste les heures et les matches)
+# F2: avec score en plus
+# F4: avec arbitre, otm et score
+
 open F,">tableau.csv";
+open F2,">tableau2.csv";
+open F4,">tableau4.csv";
 @salles=keys %htsalle;
 @salless=&ordre_salles(@salles);
-print F "creneau;",join(';',@salless),";\n";
+print F  "creneau;",join(';',@salless),";\n";
+print F2 "creneau;",join(';',@salless),";\n";
+print F4 "creneau;",join(';',@salless),";\n";
+
 foreach $mins (@minss)
 {
+    $sp=";";
     $hh=floor($mins/60);
     $mm=$mins-$hh*60;
-    printf F "%02d:%02d;",$hh,$mm;
+    printf F  "%02d:%02d;",$hh,$mm;
+    printf F2 "%02d:%02d;",$hh,$mm;
+    printf F4 "%02d:%02d;",$hh,$mm;
     foreach $salle (@salless)
     {
 	$mp=$htsalle{$salle}{$mins};
 	print F $mp,";";
+	print F2 $mp,";";
+	print F4 $mp,";";
+	$sp.=";";
     }
-    print F "\n";
+    print F  "\n";
+    print F2 "\n";
+    print F2 "$sp\n";
+    print F4 "\n";
+    print F4 "$sp\n";
+    print F4 "$sp\n";
+    print F4 "$sp\n";
 }
 close F;
+close F2;
+close F4;
+
+# generation du tableau avec triple ligne
     
 sub ordre_salles
 {
