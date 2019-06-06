@@ -144,21 +144,28 @@ while ((keys %ht_m_restants)+0>0)
 	($p,$e1,$e2,$r)=split /;/,$match;
 	print "  - essai sur $e1 vs $e2 dans $p\n" if $verbose > 1;
 	# on itère sur les créneaux dispos
-	$omins=0;
-	foreach $mins (@minss)
+	for ($im=0;$im<=$#minss;$im++)
 	{
+	    $mins=$minss[$im];
 	    if ($nb_matches_restant_sur_creneau{$mins}>0)
 	    {
 		# ok : creneau dispo
+		# calculs old et next mins
+		$omins=$nmins=0;
+		$omins=$minss[$im-1] if $im>0;
+		$nmins=$minss[$im+1] if $im<$#minss;
+		# verif si une des 2 equipes joue deja sur ce creneau
 		if ( (!exists($ht_eq_joue_deja{"$p;$e1;$mins"})) &&
 		     (!exists($ht_eq_joue_deja{"$p;$e2;$mins"})) )
 		{
 		    if ( ($passe>1) ||
 			 ( (!exists($ht_eq_joue_deja{"$p;$e1;$omins"})) &&
-			   (!exists($ht_eq_joue_deja{"$p;$e2;$omins"})) ) )
+			   (!exists($ht_eq_joue_deja{"$p;$e2;$omins"})) &&
+			   (!exists($ht_eq_joue_deja{"$p;$e1;$nmins"})) &&
+			   (!exists($ht_eq_joue_deja{"$p;$e2;$nmins"})) ) )
 		    {
 			# ok aucune des 2 équipe ne joue déjà sur le créneau
-			# ou sur celui d'avant (pour la première passe)
+			# ou sur celui d'avant ou d'apres (pour la première passe)
 			# on supprime le match de la table et on décrémente la dispo du créneau
 			delete $ht_m_restants{$match};
 			$nb_matches_restant_sur_creneau{$mins}--;
@@ -175,8 +182,6 @@ while ((keys %ht_m_restants)+0>0)
 		    }
 		}
 	    }
-	    # on note sous le coude le créneau actuel qui va devenir le précédent
-	    $omins=$mins;
 	}	
     }
     print "- fin passe $passe : ",(keys %ht_m_restants)+0," matches à ventiller \n\n" if $verbose;

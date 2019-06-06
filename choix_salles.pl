@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use POSIX;
+use List::Util 'shuffle';
 
 $verbose=1;
 
@@ -111,7 +112,8 @@ foreach $mins (@minss)
     # chargement des matches du créneau => hash matches par poule et global presence
     %htmpp=();
     %htmsc=();
-    foreach $mp (@{$htm{$mins}})
+    # on brasse au hasard les matches du créneau pour de meilleures stats de terrain
+    foreach $mp (shuffle @{$htm{$mins}})
     {
 	next unless $mp=~/[A-Za-z]/;
 	# colomier1 - otb (u9a)
@@ -129,15 +131,18 @@ foreach $mins (@minss)
 	print "    - pour salle $salle : " if $verbose>1;
 	if (exists $htp{$salle})
 	{
-	    # priorité pour cette salle
-	    print " (priorités ",join(',',sort keys %{$htp{$salle}}),") " if $verbose>2;
-	    foreach $i (sort keys %{$htp{$salle}})
+	    # priorités pour cette salle
+	    @kp=sort keys %{$htp{$salle}};
+	    print " (priorités ",join(',',@kp),") " if $verbose>2;
+	    foreach $i (@kp)
 	    {
 		# liste des poules au rang de priorité i
-		foreach $p (@{$htp{$salle}{$i}})
+		@tp=@{$htp{$salle}{$i}};
+		# mélangeons les poules de même priorité pour ne pas donner la meilleure salle toujours à la première poule par ordre lexico
+		@shtp=shuffle @tp;
+		foreach $p (@shtp)
 		{
 		    print " [ rg $i : $p ? ] " if $verbose>3;
-		    print " { hash ",$htmpp{$p}," [0] ",$htmpp{$p}[0]," } "if $verbose>4;
 		    # poule prioritaire p, a-t-on un match ds cette poule sur le créneau ?
 		    next unless exists $htmpp{$p};
 		    # ok a des des matches de cette poule sur le créneau, on itère

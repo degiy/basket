@@ -2,3 +2,10 @@
 ./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv
 ./affect.pl -lm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv
 ./choix_salles.pl  -i ./matches_sur_creneaux.csv -c creneaux.csv -v -v -v
+
+while true ;do ./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv | grep '^. passe.2';done
+b=9; while (( $b != 2 )) ;do ./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv | grep '^. passe.2' > a; b=`cat a | sed -e 's/^.*reste //' -e 's/ mat.*$//'` ;echo $b;done
+while true ;do ./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c creneaux.csv | grep 'passe.2';done
+
+cat matches_sur_creneaux.csv | tr ';' '\012' | grep '(' | uniq -c | wc
+grep . m_u* | wc
