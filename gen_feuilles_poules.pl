@@ -59,17 +59,19 @@ foreach $fp (@fps)
     }
 
     # matches joues
-    &op($lstat+1,"SI(@1>=0;1)");
+    &op($lstat+1,'IF(@1="";0;1)');
     # matches gagnés
-    &op($lstat+2,"SI(@1>@2;1)");
+    &op($lstat+2,'IF(@1>@2;1;0)');
     # matches nuls
-    &op($lstat+3,"SI(@1==@2;1)");
+    &op($lstat+3,'IF(@1="";0;1)*IF(@1=@2;1;0)');
     # matches perdus
-    &op($lstat+4,"SI(@1<@2;1)");
+    &op($lstat+4,'IF(@1<@2;1;0)');
     # pts marqués
-    &op($lstat+5,"@1");
+    &op($lstat+5,'IF(@1="";0;@1)');
     # pts encaissés
-    &op($lstat+5,"@2");
+    &op($lstat+6,'IF(@2="";0;@2)');
+    # autres stats
+    &ops($lstat+7);
     
     # generation fichier csv
     open F,">f_$p.csv";
@@ -77,6 +79,65 @@ foreach $fp (@fps)
     close F;
 }
 
+
+sub ops
+{
+    my ($ligne)=@_;
+    print "  - stats diverses sur ligne $ligne\n" if $verbose>1;
+    # on itere sur toutes les equipes
+    for(my $i=0;$i<$nb;$i++)
+    {
+	# diff de pts
+	$h{$i+2}{$ligne}="=".$z[$i+2].($ligne-2)."-".$z[$i+2].($ligne-1);
+	# score
+	$h{$i+2}{$ligne+1}="=3*".$z[$i+2].($ligne-5)."+".$z[$i+2].($ligne-4);
+	# rang
+	$h{$i+2}{$ligne+2}="=RANK(".$z[$i+2].($ligne+1).";B".($ligne+1).":".$z[$nb+1].($ligne+1).";0)";
+    }
+}
+
+sub op
+{
+    my ($ligne,$exp)=@_;
+    print "  - stats $exp sur ligne $ligne\n" if $verbose>1;
+    # on itere sur toutes les equipes
+    for(my $i=0;$i<$nb;$i++)
+    {
+	my $res=&opi($exp,$i+1);
+	$h{$i+2}{$ligne}=$res;
+    }
+}
+
+sub opi
+{
+    my ($exp,$e)=@_;
+    my $res="= 0 ";
+    # on itere sur la ligne (match allés)
+    print "    - stat pour equipe $e\n" if $verbose>2;
+    for (my $i=$e+1;$i<=$nb;$i++)
+    {
+	my $form=$exp;
+	my $c1=$z[$i*2].($e+1);
+	my $c2=$z[$i*2+1].($e+1);
+	print "      - cell c1=$c1,c2=$c2\n" if $verbose>3;
+	$form=~s/\@1/$c1/g;
+	$form=~s/\@2/$c2/g;
+	$res.="+ $form";
+    }
+    # on itere sur la colonne (match retours)
+    for (my $i=1;$i<$e;$i++)
+    {
+	my $form=$exp;
+	my $c1=$z[$e*2+1].($i+1);
+	my $c2=$z[$e*2].($i+1);
+	print "      - cell c1=$c1,c2=$c2\n" if $verbose>3;
+	$form=~s/\@1/$c1/g;
+	$form=~s/\@2/$c2/g;
+	$res.="+ $form";
+    }
+    
+    return $res;
+}
 
 sub clean
 {
@@ -99,7 +160,7 @@ sub gen
     {
 	for ($x=1;$x<=$dx;$x++)
 	{
-	    print F $h{$x}{$y},';';
+	    print F $h{$x}{$y},"\t";
 	}
 	print F "\n";
     }
