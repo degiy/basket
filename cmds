@@ -9,3 +9,8 @@ while true ;do ./affect.pl -sm save.csv -v -o matches_sur_creneaux.csv -c crenea
 
 cat matches_sur_creneaux.csv | tr ';' '\012' | grep '(' | uniq -c | wc
 grep . m_u* | wc
+cat a | tr '\011' '\012' | grep '(' > aa
+cat aa | sed -e 's/^.* - //' | tr -d '()' | awk '{print $2,$1}' > aaa
+cat aa | sed -e 's/ - .*(/ /' | tr -d ')' | awk '{print $2,$1}' > aaaa
+cat aaa aaaa | sort -u > aaaaa
+for a in `cat aaaaa | awk '{print $1}' | sort -u`; do echo $a ; grep "^$a [a-z]" aaaaa | awk '{print $2 ";"}' > p_$a.csv; done
