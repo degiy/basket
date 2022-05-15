@@ -1,8 +1,10 @@
 #!/usr/bin/perl
 
 # script de creation des différentes matches d'une poule
+# si on ne veut pas de match entre equipes du meme club
+$pmclub=defined $ENV{PAS_DE_MATCH_ENTRE_EQUIPES_DU_MEME_CLUB};
 
-$#ARGV==-1 and die "$0 -i <p_poule.csv>\n";
+$#ARGV==-1 and die "$0 <p_poule.csv>\n";
 $file=$ARGV[0];
 
 $poule=$file;
@@ -29,7 +31,17 @@ for ($i=0;$i<$nb;$i++)
 {
     for ($j=$i+1;$j<$nb;$j++)
     {
-	print F $c++,';',$eqs[$i],';',$eqs[$j],';',"\n";
+	$ea=$eqs[$i];
+	$eb=$eqs[$j];
+	if ($pmclub)
+	{
+	    $cea=$ea;
+	    $ceb=$eb;
+	    $cea=~s/[0-9]*//g;
+	    $ceb=~s/[0-9]*//g;
+	    next if $cea eq $ceb;
+	}
+	print F $c++,';',$ea,';',$eb,';',"\n";
     }
 }
 close F;

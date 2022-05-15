@@ -68,6 +68,8 @@ foreach $salle (@salles)
 	print "  creneau $c (a $mins min) => $hhmm\n" if $verbose>3;
 	$ht_mins{$mins}=[] unless exists $ht_mins{$mins};
 	push @{$ht_mins{$mins}},$s;
+	# correspondance num creneau->heure et mins->heure
+	$ht_hhmm_mins{$hhmm}=$mins;
     }
     close F;
 }
@@ -89,6 +91,29 @@ foreach $mins (@minss)
     print FC $mins,';',$ht_nb{$mins},';',join(';',@{$ht_mins{$mins}}),";\n";
 }
 close FC unless $fc eq '';
+
+# recup de criteres de trou par poule (s'ils existent)
+open F, "grep '^#trou' p_*csv |";
+while (<F>)
+{
+    # p_u9a.csv:#trou 10:40;11:00;
+    s/^p_//;
+    s/.csv:#trou /;/;
+    print "trou line = --",$_,"--\n" if $verbose>1;
+    @t=split /;/;
+    $p=shift @t;
+    # indexation des heure par poule 1,2,3,...
+    foreach $hhmm (@t)
+    {
+	next unless $hhmm=~/[0-9]{2}:[0-9]{2}/;
+	next unless exists $ht_hhmm_mins{$hhmm};
+	# on flague le trou pour la poule
+	$ht_poule_hhmm{$p}{$ht_hhmm_mins{$hhmm}}=1;
+	print "  - trou pour poule $p a $hhmm\n" if $verbose>2;
+    }
+}
+close F;
+
 
 goto trait if $skip_poules;
 print "======================================== lecture matches ========================================\n" if $verbose;
@@ -147,7 +172,8 @@ while ((keys %ht_m_restants)+0>0)
 	for ($im=0;$im<=$#minss;$im++)
 	{
 	    $mins=$minss[$im];
-	    if ($nb_matches_restant_sur_creneau{$mins}>0)
+	    # il reste des creneaux dispo sur ce creneau, et ce n'est pas un trou pour la poule
+	    if ( ($nb_matches_restant_sur_creneau{$mins}>0) && (! exists $ht_poule_hhmm{$p}{$mins}) )
 	    {
 		# ok : creneau dispo
 		# calculs old et next mins

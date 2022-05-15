@@ -14,3 +14,5 @@ cat aa | sed -e 's/^.* - //' | tr -d '()' | awk '{print $2,$1}' > aaa
 cat aa | sed -e 's/ - .*(/ /' | tr -d ')' | awk '{print $2,$1}' > aaaa
 cat aaa aaaa | sort -u > aaaaa
 for a in `cat aaaaa | awk '{print $1}' | sort -u`; do echo $a ; grep "^$a [a-z]" aaaaa | awk '{print $2 ";"}' > p_$a.csv; done
+rm -f m_* p_* t_* f_*
+
