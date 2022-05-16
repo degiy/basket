@@ -1,0 +1,18 @@
+560;aut1 - bru1 (u11m_a);aut3 - cug3 (u11m_c);aut2 - tou2 (u11m_b);gimo - last (u11f_c);
+580;ast1 - net1 (u11f_a);auc1 - cug1 (u11f_a);cug1 - tou1 (u11m_a);cass - lab2 (u11m_d);
+600;stj2 - tou2 (u11m_b);last - net3 (u11f_c);aut3 - lab1 (u11m_c);cug3 - lav1 (u11m_c);
+620;cug1 - net1 (u11f_a);lav2 - vill (u11m_d);fro2 - lab2 (u11m_d);ast2 - auc2 (u11f_b);
+640;bru2 - tou2 (u11m_b);frou - net3 (u11f_c);cug3 - fro1 (u11m_c);ast1 - auc1 (u11f_a);
+660;cass - lav2 (u11m_d);fro2 - vill (u11m_d);auc2 - tou2 (u11f_b);cug1 - tou1 (u11f_a);
+680;fro1 - lav1 (u11m_c);auc1 - net1 (u11f_a);cug2 - stj2 (u11m_b);frou - last (u11f_c);
+700;ast2 - tou2 (u11f_b);aut1 - tou1 (u11m_a);gimo - net3 (u11f_c);bru1 - stj1 (u11m_a);
+720;cass - fro2 (u11m_d);lab2 - lav2 (u11m_d);brug - frou (u11f_c);aut2 - bru2 (u11m_b);
+740;cug1 - stj1 (u11m_a);cug2 - tou2 (u11m_b);bru1 - tou1 (u11m_a);bru2 - stj2 (u11m_b);
+760;ast1 - cug1 (u11f_a);fro2 - lav2 (u11m_d);lab1 - lav1 (u11m_c);aut3 - fro1 (u11m_c);
+780;net2 - tou2 (u11f_b);ast2 - cug2 (u11f_b);;;
+800;brug - net3 (u11f_c);frou - gimo (u11f_c);aut3 - lav1 (u11m_c);ast1 - tou1 (u11f_a);
+820;cug2 - net2 (u11f_b);stj1 - tou1 (u11m_a);bru1 - cug1 (u11m_a);fro1 - lab1 (u11m_c);
+840;brug - last (u11f_c);bru2 - cug2 (u11m_b);lab2 - vill (u11m_d);net1 - tou1 (u11f_a);
+860;cug2 - tou2 (u11f_b);auc2 - net2 (u11f_b);aut1 - stj1 (u11m_a);aut2 - stj2 (u11m_b);
+880;auc1 - tou1 (u11f_a);brug - gimo (u11f_c);cass - vill (u11m_d);cug3 - lab1 (u11m_c);
+900;ast2 - net2 (u11f_b);auc2 - cug2 (u11f_b);aut1 - cug1 (u11m_a);aut2 - cug2 (u11m_b);
