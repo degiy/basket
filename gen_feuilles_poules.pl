@@ -15,15 +15,15 @@ foreach $fp (@fps)
     $p=~s/.csv$//;
     open F,$fp;
     print "- poule $p :\n" if $verbose;
-    @te=();
+    @ter=();
     while (<F>)
     {
-        next unless /[A-Za-z]/;
-        next if /#/;
-        ($e,$r)=split ';',$_;
-        print "  - equipe $e\n" if $verbose > 1;
-        push @te,$e;
+        next unless /^[A-Za-z]/;
+	s/([0-9A-Za-z-_]+) *.*$/$1/s;
+        print "  - equipe $_\n" if $verbose > 1;
+        push @ter,$_;
     }
+    @te=sort @ter;
     close F;
     $nb=$#te+1;
     print "  => $nb equipes\n" if $verbose;
@@ -59,17 +59,17 @@ foreach $fp (@fps)
     }
 
     # matches joues
-    &op($lstat+1,'IF(@1="";0;1)');
+    &op($lstat+1,'SI(@1="";0;1)');
     # matches gagnés
-    &op($lstat+2,'IF(@1>@2;1;0)');
+    &op($lstat+2,'SI(@1>@2;1;0)');
     # matches nuls
-    &op($lstat+3,'IF(@1="";0;1)*IF(@1=@2;1;0)');
+    &op($lstat+3,'SI(@1="";0;1)*SI(@1=@2;1;0)');
     # matches perdus
-    &op($lstat+4,'IF(@1<@2;1;0)');
+    &op($lstat+4,'SI(@1<@2;1;0)');
     # pts marqués
-    &op($lstat+5,'IF(@1="";0;@1)');
+    &op($lstat+5,'SI(@1="";0;@1)');
     # pts encaissés
-    &op($lstat+6,'IF(@2="";0;@2)');
+    &op($lstat+6,'SI(@2="";0;@2)');
     # autres stats
     &ops($lstat+7);
     
@@ -90,9 +90,9 @@ sub ops
 	# diff de pts
 	$h{$i+2}{$ligne}="=".$z[$i+2].($ligne-2)."-".$z[$i+2].($ligne-1);
 	# score
-	$h{$i+2}{$ligne+1}="=3*".$z[$i+2].($ligne-5)."+".$z[$i+2].($ligne-4);
+	$h{$i+2}{$ligne+1}="=3*".$z[$i+2].($ligne-5)."+2*".$z[$i+2].($ligne-4)."+".$z[$i+2].($ligne-3);
 	# rang
-	$h{$i+2}{$ligne+2}="=RANK(".$z[$i+2].($ligne+1).";B".($ligne+1).":".$z[$nb+1].($ligne+1).";0)";
+	$h{$i+2}{$ligne+2}="=RANG(".$z[$i+2].($ligne+1).";B".($ligne+1).":".$z[$nb+1].($ligne+1).";0)";
     }
 }
 
