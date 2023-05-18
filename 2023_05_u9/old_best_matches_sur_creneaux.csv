@@ -1,0 +1,15 @@
+580;fro2 - toac (u9);fro1 - mont (u9);
+600;cug1 - stjo (u9);mont - toac (u9);
+620;fro1 - toac (u9);fro2 - mont (u9);
+640;cug2 - stjo (u9);;
+660;cug1 - toac (u9);;
+680;cug2 - fro1 (u9);mont - stjo (u9);
+700;;;
+720;;;
+740;;;
+760;stjo - toac (u9);cug2 - fro2 (u9);
+780;cug1 - mont (u9);;
+800;fro1 - stjo (u9);cug2 - toac (u9);
+820;cug1 - fro2 (u9);;
+840;cug2 - mont (u9);;
+860;fro2 - stjo (u9);cug1 - fro1 (u9);

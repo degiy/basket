@@ -1,0 +1,17 @@
+creneau;bouin1;bouin2;
+09:40;fro1;stjo;cug1;toac;
+10:00;fro2;mont;;;
+10:20;stjo;toac;;;
+10:40;cug1;fro2;fro1;mont;
+11:00;cug2;stjo;;;
+11:20;cug1;mont;fro1;toac;
+11:40;;;;;
+12:00;;;;;
+12:20;;;;;
+12:40;cug2;mont;fro2;toac;
+13:00;cug1;stjo;;;
+13:20;cug2;fro1;mont;toac;
+13:40;fro2;stjo;;;
+14:00;cug1;fro1;cug2;toac;
+14:20;mont;stjo;;;
+14:40;cug2;fro2;;;

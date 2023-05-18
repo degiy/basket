@@ -1,0 +1,18 @@
+560;cug1 - lar1 (u11m_a);toa2 - vill (u11m_b);cug2 - otb (u11m_b);
+580;lave - vil2 (u11f);net1 - stjo (u11m_a);cugn - vil1 (u11f);
+600;lar2 - otb (u11m_b);cug1 - mont (u11m_a);net2 - toa2 (u11m_b);
+620;lave - vil1 (u11f);cugn - vil2 (u11f);stjo - toa1 (u11m_a);
+640;lar2 - vill (u11m_b);net2 - otb (u11m_b);mont - net1 (u11m_a);
+660;vil1 - vil2 (u11f);lave - mont (u11f);cugn - lard (u11f);
+680;lar2 - toa2 (u11m_b);lar1 - mont (u11m_a);cug2 - net2 (u11m_b);
+700;cug1 - stjo (u11m_a);otb - vill (u11m_b);;
+720;cug2 - lar2 (u11m_b);lar1 - net1 (u11m_a);mont - toa1 (u11m_a);
+740;otb - toa2 (u11m_b);;;
+760;lar2 - net2 (u11m_b);lard - vil1 (u11f);mont - vil2 (u11f);
+780;cugn - lave (u11f);;;
+800;cug1 - net1 (u11m_a);mont - vil1 (u11f);lard - vil2 (u11f);
+820;mont - stjo (u11m_a);lar1 - toa1 (u11m_a);;
+840;lard - mont (u11f);cug2 - toa2 (u11m_b);net2 - vill (u11m_b);
+860;cug1 - toa1 (u11m_a);lar1 - stjo (u11m_a);;
+880;cug2 - vill (u11m_b);cugn - mont (u11f);lard - lave (u11f);
+900;net1 - toa1 (u11m_a);;;

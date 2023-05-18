@@ -1,0 +1,10 @@
+ln -s ../match_de_poule.pl .
+ln -s ../gen_poules.sh      
+ln -s ../creneaux_salle.pl 
+ln -s ../choix_salles.pl   
+ln -s ../affect.pl       
+ln -s ../cmds .    
+ln -s ../gen.sh 
+# ln -s ../gen_salles.sh   
+ln -s ../gen_feuilles_poules.pl .
+

@@ -1,0 +1,18 @@
+creneau;roure;ext1;ext2;
+09:40;mont - toa1 (u11m_a);lar1 - otb (u11m_b);net1 - toa2 (u11m_c);
+10:00;lard - mont (u11f);cugn - lave (u11f);vil1 - vil2 (u11f);
+10:20;lar2 - net1 (u11m_c);cug2 - otb (u11m_b);stjo - toa2 (u11m_c);
+10:40;cugn - vil2 (u11f);cug1 - mont (u11m_a);net2 - toa1 (u11m_a);
+11:00;mont - vil1 (u11f);lar2 - stjo (u11m_c);lar1 - vill (u11m_b);
+11:20;cugn - lard (u11f);lave - vil2 (u11f);mont - net2 (u11m_a);
+11:40;cug1 - toa1 (u11m_a);cug2 - vill (u11m_b);net1 - stjo (u11m_c);
+12:00;cugn - mont (u11f);lard - vil1 (u11f);lar2 - toa2 (u11m_c);
+12:20;cug2 - lar1 (u11m_b);cug1 - net2 (u11m_a);otb - vill (u11m_b);
+12:40;-;-;-;
+13:00;-;-;-;
+13:20;lave - mont (u11f);cugn - vil1 (u11f);lard - vil2 (u11f);
+13:40;-;-;-;
+14:00;lave - vil1 (u11f);mont - vil2 (u11f);-;
+14:20;-;-;-;
+14:40;lard - lave (u11f);-;-;
+15:00;-;-;-;

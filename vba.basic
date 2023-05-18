@@ -1,0 +1,506 @@
+Sub tout()
+menage
+loadcsv
+Colorise
+ReportScores
+loadtbl
+CompleteFeuilles
+End Sub
+
+Sub menage()
+
+    Dim xWs As Worksheet
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    For Each xWs In Application.ActiveWorkbook.Worksheets
+        If xWs.Name <> "chargement" Then
+            xWs.Delete
+        End If
+    Next
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+End Sub
+
+
+Sub loadcsv()
+'
+' loadcsv Macro
+'
+    Dim wks As Worksheet
+    Set wks = Sheets("chargement")
+    Dim rep As String
+    rep = wks.Cells(1, 1).Value
+    Debug.Print ("repertoire = " + rep)
+    
+    Dim colRange As Range
+    
+        Set colRange = wks.Range(wks.Cells(2, 1), wks.Cells(9, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            'Do something to each cell
+            Debug.Print ("cell =" + cell.Value)
+            If StrComp(cell.Value, "", vbTestCompare) <> 0 Then
+            
+            Dim fn As String
+            fn = rep + cell.Value
+            Debug.Print ("fn =" + fn)
+            Sheets.Add After:=Sheets(Sheets.Count)
+            Sheets(Sheets.Count).Select
+            Sheets(Sheets.Count).Name = cell.Value
+            With ActiveSheet.QueryTables.Add(Connection:= _
+                "TEXT;" + fn, Destination:=Range( _
+                "$A$1"))
+                .Name = cell.Value
+                .FieldNames = True
+                .RowNumbers = False
+                .FillAdjacentFormulas = False
+                .PreserveFormatting = True
+                .RefreshOnFileOpen = False
+                .RefreshStyle = xlInsertDeleteCells
+                .SavePassword = False
+                .SaveData = True
+                .AdjustColumnWidth = True
+                .RefreshPeriod = 0
+                .TextFilePromptOnRefresh = False
+                .TextFilePlatform = 28605
+                .TextFileStartRow = 1
+                .TextFileParseType = xlDelimited
+                .TextFileTextQualifier = xlTextQualifierNone
+                .TextFileConsecutiveDelimiter = False
+                .TextFileTabDelimiter = False
+                .TextFileSemicolonDelimiter = True
+                .TextFileCommaDelimiter = False
+                .TextFileSpaceDelimiter = False
+                .TextFileColumnDataTypes = Array(1, 1, 1, 1, 1, 1, 1, 1, 1)
+                .TextFileTrailingMinusNumbers = True
+                .Refresh BackgroundQuery:=False
+            End With
+            End If
+        Next cell
+End Sub
+
+Sub loadtbl()
+'
+' loadtbl Macro
+'
+    Dim wks As Worksheet
+    Set wks = Sheets("chargement")
+    Dim rep As String
+    rep = wks.Cells(1, 1).Value
+    Debug.Print ("repertoire = " + rep)
+    
+    Dim colRange As Range
+    
+        Set colRange = wks.Range(wks.Cells(20, 1), wks.Cells(29, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            'Do something to each cell
+            Debug.Print ("cell =" + cell.Value)
+            If StrComp(cell.Value, "", vbTestCompare) <> 0 Then
+            
+            Dim fn As String
+            fn = rep + cell.Value
+            Debug.Print ("fn =" + fn)
+            Sheets.Add After:=Sheets(Sheets.Count)
+            Sheets(Sheets.Count).Select
+            Sheets(Sheets.Count).Name = cell.Value
+            With ActiveSheet.QueryTables.Add(Connection:= _
+                "TEXT;" + fn, Destination:=Range( _
+                "$A$1"))
+                .Name = cell.Value
+                .FieldNames = True
+                .RowNumbers = False
+                .FillAdjacentFormulas = False
+                .PreserveFormatting = True
+                .RefreshOnFileOpen = False
+                .RefreshStyle = xlInsertDeleteCells
+                .SavePassword = False
+                .SaveData = True
+                .AdjustColumnWidth = True
+                .RefreshPeriod = 0
+                .TextFilePromptOnRefresh = False
+                .TextFilePlatform = 28605
+                .TextFileStartRow = 1
+                .TextFileParseType = xlDelimited
+                .TextFileTextQualifier = xlTextQualifierNone
+                .TextFileConsecutiveDelimiter = False
+                .TextFileTabDelimiter = True
+                .TextFileSemicolonDelimiter = False
+                .TextFileCommaDelimiter = False
+                .TextFileSpaceDelimiter = False
+                .TextFileColumnDataTypes = Array(1, 1, 1, 1, 1, 1, 1, 1, 1)
+                .TextFileTrailingMinusNumbers = True
+                .Refresh BackgroundQuery:=False
+            End With
+            End If
+        Next cell
+End Sub
+
+Sub RecherchePoule(Zone As Range, poule As String, Couleur As Variant)
+
+    Dim cel As Range
+
+    For Each cel In Zone.Cells
+        'Debug.Print cel.Address, cel.Value
+        If InStr(cel.Value, poule) Then
+            Debug.Print cel.Value & " colle "
+            cel.Interior.Color = Couleur
+        End If
+    Next cel
+
+End Sub
+
+
+
+
+Sub Colorise()
+    Dim wks, twks As Worksheet
+    Set wks = Sheets("chargement")
+    Set twks = Sheets("tableau.csv")
+    
+    Dim colRange, trange As Range
+    Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(20, 20))
+    
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(16, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            Dim poule As String
+            poule = cell.Value
+            Dim coul As Double
+            coul = cell.Interior.Color
+            'Do something to each cell
+            Debug.Print ("cell =" + poule)
+            RecherchePoule trange, poule, coul
+        Next
+
+End Sub
+
+Sub ColoriseSplit()
+    Dim wks, twks As Worksheet
+    Set wks = Sheets("chargement")
+    Set twks = Sheets("tableau_split.csv")
+    
+    Dim colRange, trange As Range
+    Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(20, 20))
+    
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(18, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            Dim poule As String
+            poule = cell.Value
+            Dim coul As Double
+            coul = cell.Interior.Color
+            'Do something to each cell
+            Debug.Print ("cell =" + poule)
+            RecherchePoule trange, poule, coul
+        Next
+
+End Sub
+
+Sub RecherchePoule2(Zone As Range, poule As String, Couleur As Variant)
+
+    Dim cel As Range
+
+    For Each cel In Zone.Cells
+        'Debug.Print cel.Address, cel.Value
+        If InStr(cel.Value, poule) Then
+            Debug.Print cel.Value & " colle "
+            cel.Interior.Color = Couleur
+            cel.Offset(1, 0).Interior.Color = Couleur
+        End If
+    Next cel
+
+End Sub
+
+
+Sub Colorise2()
+    Dim wks, twks As Worksheet
+    Set wks = Sheets("chargement")
+    Set twks = Sheets("tableau2.csv")
+    
+    Dim colRange, trange As Range
+    Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(40, 10))
+    
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(13, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            Dim poule As String
+            poule = cell.Value
+            Dim coul As Double
+            coul = cell.Interior.Color
+            'Do something to each cell
+            Debug.Print ("cell =" + poule)
+            RecherchePoule2 trange, poule, coul
+        Next
+
+End Sub
+
+Sub RecherchePoule4(Zone As Range, poule As String, Couleur As Variant)
+
+    Dim cel As Range
+
+    For Each cel In Zone.Cells
+        'Debug.Print cel.Address, cel.Value
+        If InStr(cel.Value, poule) Then
+            Debug.Print cel.Value & " colle "
+            cel.Interior.Color = Couleur
+            cel.Offset(1, 0).Interior.Color = Couleur
+            cel.Offset(2, 0).Interior.Color = Couleur
+            cel.Offset(3, 0).Interior.Color = Couleur
+        End If
+    Next cel
+
+End Sub
+
+
+Sub Colorise4()
+    Dim wks, twks As Worksheet
+    Set wks = Sheets("chargement")
+    Set twks = Sheets("tableau4.csv")
+    
+    Dim colRange, trange As Range
+    Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(80, 10))
+    
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(13, 1))
+    
+        'Loop through all cells in row up to last col
+        For Each cell In colRange
+            Dim poule As String
+            poule = cell.Value
+            Dim coul As Double
+            coul = cell.Interior.Color
+            'Do something to each cell
+            Debug.Print ("cell =" + poule)
+            RecherchePoule4 trange, poule, coul
+        Next
+
+End Sub
+
+' pour saisie des scores dans tableau à 3 lignes par match
+Sub Tab3DepuisTab()
+    'declaration variables
+    Dim cmax, lmax, x, y, yy As Long
+    
+    'on determinse la taille du tableau initial
+    Dim xWs, t3wks, twks As Worksheet
+    Set twks = Sheets("tableau.csv")
+    lmax = twks.UsedRange.Rows.Count
+    cmax = twks.UsedRange.Columns.Count
+    Debug.Print "taille ", cmax, "colonnes par ", lmax, " lignes"
+    
+    'suppression et recreation page pour tableau3
+    Application.ScreenUpdating = False
+    Application.DisplayAlerts = False
+    For Each xWs In Application.ActiveWorkbook.Worksheets
+        If xWs.Name = "Tableau3" Then
+            xWs.Delete
+        End If
+    Next
+    Application.DisplayAlerts = True
+    Application.ScreenUpdating = True
+    Sheets.Add.Name = "Tableau3"
+    Set t3wks = Sheets("Tableau3")
+
+    'formatage fonte, taille colonnes
+    With t3wks.Range(Cells(1, 1), Cells(3 * lmax - 2, cmax))
+        .Font.Name = "Courier New"
+        .Font.Size = 11
+        .Font.Bold = True
+        .ColumnWidth = 25
+    End With
+    t3wks.Range("A:A").ColumnWidth = 12
+
+    'recopie des salles (1ère ligne)
+    For x = 1 To cmax
+        t3wks.Cells(1, x).Value = twks.Cells(1, x).Value
+    Next
+
+    'duplication des lignes du tableau à plat en tableau à 3 lignes pour saisie score
+    For y = 2 To lmax
+        yy = y * 3 - 4
+        'application d'un fond gris ou pas une macro ligne sur 2
+        If ((y And 1) = 1) Then
+            With t3wks.Range(Cells(yy, 1), Cells(yy + 2, cmax)).Interior
+                .ThemeColor = xlThemeColorDark1
+                .PatternColorIndex = xlAutomatic
+                .TintAndShade = -0.149998474074526
+                .PatternTintAndShade = 0
+            End With
+        End If
+        'copie creneau horaire (1ere colonne) et merge des 3 lignes
+        t3wks.Cells(yy, 1).Value = twks.Cells(y, 1).Value
+        t3wks.Cells(yy, 1).NumberFormat = twks.Cells(y, 1).NumberFormat
+        t3wks.Range(Cells(yy, 1), Cells(yy + 2, 1)).Merge
+        Debug.Print "# ligne ", y, " (", yy, ")"
+        With t3wks.Range(Cells(yy, 1), Cells(yy + 2, 1))
+            .HorizontalAlignment = xlLeft
+            .VerticalAlignment = xlCenter
+            .Borders(xlEdgeRight).LineStyle = xlDouble
+            .Borders(xlEdgeRight).Weight = xlThick
+            .Borders(xlEdgeTop).LineStyle = xlContinuous
+            .Borders(xlEdgeTop).Weight = xlThick
+            .Borders(xlEdgeBottom).LineStyle = xlContinuous
+            .Borders(xlEdgeBottom).Weight = xlThick
+        End With
+        For x = 2 To cmax
+            'formatage du bloc de 3 lignes pour saisie du score gauche/droite
+            t3wks.Cells(yy, x).Value = twks.Cells(y, x).Value
+            t3wks.Cells(yy, x).Interior.Color = twks.Cells(y, x).Interior.Color
+            With t3wks.Range(Cells(yy, x), Cells(yy + 2, x))
+                .Borders(xlEdgeBottom).LineStyle = xlContinuous
+                .Borders(xlEdgeBottom).Weight = xlThick
+            End With
+            For Each cell In t3wks.Range(Cells(yy, x), Cells(yy + 2, x))
+                cell.Borders(xlEdgeRight).LineStyle = xlContinuous
+                cell.Borders(xlEdgeRight).Weight = xlThin
+            Next
+            t3wks.Cells(yy + 1, x).NumberFormat = "0"
+            t3wks.Cells(yy + 1, x).HorizontalAlignment = xlLeft
+            t3wks.Cells(yy + 1, x).IndentLevel = 1
+            t3wks.Cells(yy + 1, x).Font.Color = -16776961
+            t3wks.Cells(yy + 2, x).NumberFormat = "0"
+            t3wks.Cells(yy + 2, x).HorizontalAlignment = xlRight
+            t3wks.Cells(yy + 2, x).Font.Color = -16776961
+            t3wks.Cells(yy + 2, x).IndentLevel = 8
+        Next
+    Next
+    'style des bordures creneaux et salles
+    With t3wks.Range(Cells(1, 1), Cells(1, cmax))
+        .Borders(xlEdgeBottom).LineStyle = xlDouble
+        .Borders(xlEdgeBottom).Weight = xlThick
+    End With
+    For Each cell In t3wks.Range(Cells(1, 2), Cells(1, cmax))
+        With cell
+            .Borders(xlEdgeRight).LineStyle = xlContinuous
+            .Borders(xlEdgeRight).Weight = xlThin
+            .HorizontalAlignment = xlCenter
+        End With
+    Next
+    t3wks.Cells(1, 1).Borders(xlEdgeRight).LineStyle = xlDouble
+    t3wks.Cells(1, 1).Borders(xlEdgeRight).Weight = xlThick
+
+End Sub
+
+' reporte les scores saisis dans Tableau 3 vers une feuille d'équipes d'une poule
+Sub ReportScores(feuille As String)
+    'declaration variables
+    Dim cmax, lmax, nbe, xe, ye, x, y, yy, yye1, yye2 As Long
+    Dim e1, e2, poule, m, mm, form As String
+        
+    'on determinse la taille du tableau T3 initial
+    Dim fwks, t3wks As Worksheet
+    Set t3wks = Sheets("Tableau3")
+    lmax = t3wks.UsedRange.Rows.Count
+    cmax = t3wks.UsedRange.Columns.Count
+    Debug.Print "taille T3 ", cmax, "colonnes par ", lmax, " lignes"
+
+    'on determine le nombre d'équipes de sur la feuille de poule
+    Set fwks = Sheets(feuille)
+    nbe = fwks.UsedRange.Columns.Count
+    nbe = (nbe - 1) / 2
+    Debug.Print "La feuille ", feuille, " contient ", nbe, " equipes"
+    
+    'mise en page (séparations)
+    For y = 2 To nbe + 1
+        'application d'un fond gris ou pas une macro ligne sur 2
+        If ((y And 1) = 1) Then
+            With fwks.Range(Cells(y, 1), Cells(y, nbe * 2 + 1)).Interior
+                .ThemeColor = xlThemeColorDark1
+                .PatternColorIndex = xlAutomatic
+                .TintAndShade = -0.149998474074526
+                .PatternTintAndShade = 0
+            End With
+        End If
+        'barres verticales
+        With fwks.Range(Cells(1, y * 2 - 2), Cells(nbe + 1, y * 2 - 1))
+                .Borders(xlEdgeRight).LineStyle = xlContinuous
+                .Borders(xlEdgeRight).Weight = xlThin
+        End With
+    Next
+    With fwks.Range(Cells(1, 1), Cells(1, nbe * 2 + 1))
+        ' double traits horizontaux
+        .Borders(xlEdgeBottom).LineStyle = xlDouble
+        .Borders(xlEdgeBottom).Weight = xlThick
+    End With
+    With fwks.Range(Cells(1, 1), Cells(nbe + 1, 1))
+        ' double traits horizontaux
+        .Borders(xlEdgeRight).LineStyle = xlDouble
+        .Borders(xlEdgeRight).Weight = xlThick
+    End With
+    ' sortie de X de cellules condamnés
+    For y = 1 To nbe
+        With fwks.Range(Cells(y + 1, 2), Cells(y + 1, y * 2 + 1)).Interior
+            .ThemeColor = xlThemeColorDark2
+            .PatternColorIndex = xlAutomatic
+            .TintAndShade = -0.149998474074526
+            .PatternTintAndShade = 0
+        End With
+        For x = 1 To y
+            fwks.Cells(y + 1, x * 2).Value = ""
+            fwks.Cells(y + 1, x * 2 + 1).Value = ""
+        Next
+    Next
+
+    'determination de la poule
+    poule = Replace(Mid(feuille, 3), ".csv", "")
+    Debug.Print "Feuille ", feuille, " pour poule ", poule
+    
+    'iteration sur les matches
+    For ye = 1 To nbe - 1
+        e1 = fwks.Cells(1 + ye, 1).Value
+        Debug.Print "# ligne equipe", e1
+        For xe = ye + 1 To nbe
+            e2 = fwks.Cells(1 + xe, 1).Value
+            'recherche match e1 vs e2 dans poule
+            m = e1 + " - " + e2 + " (" + poule + ")"
+            Debug.Print "  - ligne equipe", e2, " match ", m
+            For y = 2 To lmax
+                yy = y * 3 - 4
+                For x = 2 To cmax
+                    mm = t3wks.Cells(yy, x).Value
+                    If StrComp(m, mm, vbTextCompare) = 0 Then
+                    ' ok match
+                    Debug.Print "     => match ligne ", yy, " colonne ", x
+                    yye1 = yy + 1
+                    yye2 = yy + 2
+                    form = "=INDIRECT(" & Chr(34) & "Tableau3!" & Chr(34) & "&ADDRESS(" & yye1 & "," & x & "))"
+                    fwks.Cells(1 + ye, xe * 2).Formula = form
+                    fwks.Cells(1 + ye, xe * 2).HorizontalAlignment = xlRight
+                    form = "=INDIRECT(" & Chr(34) & "Tableau3!" & Chr(34) & "&ADDRESS(" & yye2 & "," & x & "))"
+                    fwks.Cells(1 + ye, xe * 2 + 1).Formula = form
+                    fwks.Cells(1 + ye, xe * 2 + 1).HorizontalAlignment = xlLeft
+                    ' on abrege les souffrance de la loop
+                    GoTo trouve
+                    End If
+                Next
+            Next
+trouve:
+        Next
+    Next
+End Sub
+
+Sub CompleteFeuilles()
+    Dim wks As Worksheet
+    Set wks = Sheets("chargement")
+    
+    Dim colRange As Range
+    Set colRange = wks.Range(wks.Cells(20, 1), wks.Cells(29, 1))
+    
+    'Liste des tableaux (feuilles)
+    For Each cell In colRange
+        'Do something to each cell
+        Debug.Print ("cell =" + cell.Value)
+        If StrComp(cell.Value, "", vbTestCompare) <> 0 Then
+            Call ReportScores(cell.Value)
+        End If
+    Next
+End Sub
+
+Sub testRS()
+    Call ReportScores("f_u11m_c.csv")
+End Sub

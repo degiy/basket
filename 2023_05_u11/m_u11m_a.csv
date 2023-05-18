@@ -1,0 +1,15 @@
+1;cug1;lar1;
+2;cug1;mont;
+3;cug1;net1;
+4;cug1;stjo;
+5;cug1;toa1;
+6;lar1;mont;
+7;lar1;net1;
+8;lar1;stjo;
+9;lar1;toa1;
+10;mont;net1;
+11;mont;stjo;
+12;mont;toa1;
+13;net1;stjo;
+14;net1;toa1;
+15;stjo;toa1;

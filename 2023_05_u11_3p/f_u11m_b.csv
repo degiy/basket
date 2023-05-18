@@ -1,0 +1,17 @@
+		cug2		lar1		otb		vill	
+cug2	X	X							
+lar1	X	X	X	X					
+otb	X	X	X	X	X	X			
+vill	X	X	X	X	X	X	X	X	
+									
+									
+equipe	cug2	lar1	otb	vill					
+m joues	= 0 + SI(D2="";0;1)+ SI(F2="";0;1)+ SI(H2="";0;1)	= 0 + SI(F3="";0;1)+ SI(H3="";0;1)+ SI(E2="";0;1)	= 0 + SI(H4="";0;1)+ SI(G2="";0;1)+ SI(G3="";0;1)	= 0 + SI(I2="";0;1)+ SI(I3="";0;1)+ SI(I4="";0;1)					
+m gagnes	= 0 + SI(D2>E2;1;0)+ SI(F2>G2;1;0)+ SI(H2>I2;1;0)	= 0 + SI(F3>G3;1;0)+ SI(H3>I3;1;0)+ SI(E2>D2;1;0)	= 0 + SI(H4>I4;1;0)+ SI(G2>F2;1;0)+ SI(G3>F3;1;0)	= 0 + SI(I2>H2;1;0)+ SI(I3>H3;1;0)+ SI(I4>H4;1;0)					
+m nuls	= 0 + SI(D2="";0;1)*SI(D2=E2;1;0)+ SI(F2="";0;1)*SI(F2=G2;1;0)+ SI(H2="";0;1)*SI(H2=I2;1;0)	= 0 + SI(F3="";0;1)*SI(F3=G3;1;0)+ SI(H3="";0;1)*SI(H3=I3;1;0)+ SI(E2="";0;1)*SI(E2=D2;1;0)	= 0 + SI(H4="";0;1)*SI(H4=I4;1;0)+ SI(G2="";0;1)*SI(G2=F2;1;0)+ SI(G3="";0;1)*SI(G3=F3;1;0)	= 0 + SI(I2="";0;1)*SI(I2=H2;1;0)+ SI(I3="";0;1)*SI(I3=H3;1;0)+ SI(I4="";0;1)*SI(I4=H4;1;0)					
+m perdus	= 0 + SI(D2<E2;1;0)+ SI(F2<G2;1;0)+ SI(H2<I2;1;0)	= 0 + SI(F3<G3;1;0)+ SI(H3<I3;1;0)+ SI(E2<D2;1;0)	= 0 + SI(H4<I4;1;0)+ SI(G2<F2;1;0)+ SI(G3<F3;1;0)	= 0 + SI(I2<H2;1;0)+ SI(I3<H3;1;0)+ SI(I4<H4;1;0)					
+pts marqu	= 0 + SI(D2="";0;D2)+ SI(F2="";0;F2)+ SI(H2="";0;H2)	= 0 + SI(F3="";0;F3)+ SI(H3="";0;H3)+ SI(E2="";0;E2)	= 0 + SI(H4="";0;H4)+ SI(G2="";0;G2)+ SI(G3="";0;G3)	= 0 + SI(I2="";0;I2)+ SI(I3="";0;I3)+ SI(I4="";0;I4)					
+pts encais	= 0 + SI(E2="";0;E2)+ SI(G2="";0;G2)+ SI(I2="";0;I2)	= 0 + SI(G3="";0;G3)+ SI(I3="";0;I3)+ SI(D2="";0;D2)	= 0 + SI(I4="";0;I4)+ SI(F2="";0;F2)+ SI(F3="";0;F3)	= 0 + SI(H2="";0;H2)+ SI(H3="";0;H3)+ SI(H4="";0;H4)					
+diff pts	=B13-B14	=C13-C14	=D13-D14	=E13-E14					
+score	=4*B10+2*B11+B12	=4*C10+2*C11+C12	=4*D10+2*D11+D12	=4*E10+2*E11+E12					
+rang	=RANG(B16;B16:E16;0)	=RANG(C16;B16:E16;0)	=RANG(D16;B16:E16;0)	=RANG(E16;B16:E16;0)					

@@ -1,0 +1,17 @@
+creneau;bouin1;bouin2;
+09:40;fro1 - stjo (u9);cug1 - toac (u9);
+10:00;fro2 - mont (u9);-;
+10:20;stjo - toac (u9);-;
+10:40;cug1 - fro2 (u9);fro1 - mont (u9);
+11:00;cug2 - stjo (u9);-;
+11:20;cug1 - mont (u9);fro1 - toac (u9);
+11:40;-;-;
+12:00;-;-;
+12:20;-;-;
+12:40;cug2 - mont (u9);fro2 - toac (u9);
+13:00;cug1 - stjo (u9);-;
+13:20;cug2 - fro1 (u9);mont - toac (u9);
+13:40;fro2 - stjo (u9);-;
+14:00;cug1 - fro1 (u9);cug2 - toac (u9);
+14:20;mont - stjo (u9);-;
+14:40;cug2 - fro2 (u9);-;
