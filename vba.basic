@@ -2,8 +2,17 @@ Sub tout()
 menage
 loadcsv
 Colorise
-ReportScores
+Colorise2
+Colorise4
 loadtbl
+Tab3DepuisTab
+CompleteFeuilles
+End Sub
+
+Sub Partiel()
+Colorise
+loadtbl
+Tab3DepuisTab
 CompleteFeuilles
 End Sub
 
@@ -34,7 +43,7 @@ Sub loadcsv()
     
     Dim colRange As Range
     
-        Set colRange = wks.Range(wks.Cells(2, 1), wks.Cells(9, 1))
+        Set colRange = wks.Range(wks.Cells(2, 1), wks.Cells(4, 1))
     
         'Loop through all cells in row up to last col
         For Each cell In colRange
@@ -178,29 +187,6 @@ Sub Colorise()
 
 End Sub
 
-Sub ColoriseSplit()
-    Dim wks, twks As Worksheet
-    Set wks = Sheets("chargement")
-    Set twks = Sheets("tableau_split.csv")
-    
-    Dim colRange, trange As Range
-    Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(20, 20))
-    
-        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(18, 1))
-    
-        'Loop through all cells in row up to last col
-        For Each cell In colRange
-            Dim poule As String
-            poule = cell.Value
-            Dim coul As Double
-            coul = cell.Interior.Color
-            'Do something to each cell
-            Debug.Print ("cell =" + poule)
-            RecherchePoule trange, poule, coul
-        Next
-
-End Sub
-
 Sub RecherchePoule2(Zone As Range, poule As String, Couleur As Variant)
 
     Dim cel As Range
@@ -225,7 +211,7 @@ Sub Colorise2()
     Dim colRange, trange As Range
     Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(40, 10))
     
-        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(13, 1))
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(16, 1))
     
         'Loop through all cells in row up to last col
         For Each cell In colRange
@@ -266,7 +252,7 @@ Sub Colorise4()
     Dim colRange, trange As Range
     Set trange = twks.Range(twks.Cells(1, 1), twks.Cells(80, 10))
     
-        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(13, 1))
+        Set colRange = wks.Range(wks.Cells(10, 1), wks.Cells(16, 1))
     
         'Loop through all cells in row up to last col
         For Each cell In colRange
@@ -401,8 +387,9 @@ Sub ReportScores(feuille As String)
 
     'on determine le nombre d'équipes de sur la feuille de poule
     Set fwks = Sheets(feuille)
+    fwks.Activate
     nbe = fwks.UsedRange.Columns.Count
-    nbe = (nbe - 1) / 2
+    nbe = (nbe - 1) \ 2
     Debug.Print "La feuille ", feuille, " contient ", nbe, " equipes"
     
     'mise en page (séparations)
@@ -503,4 +490,83 @@ End Sub
 
 Sub testRS()
     Call ReportScores("f_u11m_c.csv")
+End Sub
+
+Sub ExportTableau3u11()
+   Dim feuille As Worksheet
+    Dim cheminComplet As String
+    Dim ligne As Long, col As Long
+    Dim derniereligne As Long, dernierecol As Long
+    Dim fichier As Integer
+    Dim ligneTexte As String
+
+    cheminComplet = ThisWorkbook.Sheets("chargement").Range("A30").Value
+
+    If cheminComplet = "" Then
+        MsgBox "Le chemin du fichier est vide (chargement!A30)."
+        Exit Sub
+    End If
+
+    If Dir(cheminComplet) <> "" Then Kill cheminComplet
+
+    Set feuille = ThisWorkbook.Sheets("Tableau3")
+    derniereligne = feuille.Cells(feuille.Rows.Count, 1).End(xlUp).Row
+    dernierecol = feuille.Cells(1, feuille.Columns.Count).End(xlToLeft).Column
+
+    fichier = FreeFile
+    Open cheminComplet For Output As #fichier
+
+    For ligne = 1 To derniereligne
+        ligneTexte = ""
+        For col = 1 To dernierecol
+            ligneTexte = ligneTexte & feuille.Cells(ligne, col).Text & IIf(col < dernierecol, ";", "")
+        Next col
+        Print #fichier, ligneTexte
+    Next ligne
+
+    Close #fichier
+End Sub
+
+Sub Bilan()
+    Dim wsBilan As Worksheet
+    Dim ws As Worksheet
+    Dim feuilles As Variant
+    Dim colBilan As Long
+    Dim i As Long
+    Dim rang As Long
+    Dim equipe As String
+
+    Set wsBilan = Worksheets("bp")
+    feuilles = Array("f_u11mA.csv", "f_u11mB.csv", "f_u11mC.csv", "f_u11mD.csv")
+
+    For colBilan = 0 To 3
+        Set ws = Worksheets(feuilles(colBilan))
+        For i = 2 To 5   ' Colonnes B à E
+            equipe = ws.Cells(8, i).Value
+            rang = ws.Cells(20, i).Value
+            wsBilan.Cells(rang, colBilan + 1).Value = equipe
+        Next i
+    Next colBilan
+    
+    feuilles = Array("f_u11fA.csv", "f_u11fB.csv", "f_u11fC.csv")
+
+    For colBilan = 0 To 1
+        Set ws = Worksheets(feuilles(colBilan))
+        For i = 2 To 5   ' Colonnes B à E
+            equipe = ws.Cells(8, i).Value
+            rang = ws.Cells(20, i).Value
+            wsBilan.Cells(rang, colBilan + 6).Value = equipe
+        Next i
+    Next colBilan
+    
+    For colBilan = 2 To 2
+        Set ws = Worksheets(feuilles(colBilan))
+        For i = 2 To 6   ' Colonnes B à F
+            equipe = ws.Cells(9, i).Value
+            rang = ws.Cells(21, i).Value
+            wsBilan.Cells(rang, colBilan + 6).Value = equipe
+        Next i
+    Next colBilan
+    
+
 End Sub

@@ -93,7 +93,7 @@ foreach $mins (@minss)
 close FC unless $fc eq '';
 
 # recup de criteres de trou par poule (s'ils existent)
-open F, "grep '^#trou' p_*csv |";
+open F, "grep '^#trou' p_*csv /dev/null |";
 while (<F>)
 {
     # p_u9a.csv:#trou 10:40;11:00;

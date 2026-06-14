@@ -15,6 +15,7 @@ open F,$file or die "impossible d'ouvrir $file\n";
 while (<F>)
 {
     next unless /[a-z]/;
+    $pmclub=1 if /#pas/;
     next if /#/;
     chomp $_;
     s/;.*$//;
@@ -37,8 +38,8 @@ for ($i=0;$i<$nb;$i++)
 	{
 	    $cea=$ea;
 	    $ceb=$eb;
-	    $cea=~s/[0-9]*//g;
-	    $ceb=~s/[0-9]*//g;
+	    $cea=~s/[FM]?[0-9]*//g;
+	    $ceb=~s/[FM]?[0-9]*//g;
 	    next if $cea eq $ceb;
 	}
 	print F $c++,';',$ea,';',$eb,';',"\n";

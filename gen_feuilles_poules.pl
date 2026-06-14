@@ -90,7 +90,7 @@ sub ops
 	# diff de pts
 	$h{$i+2}{$ligne}="=".$z[$i+2].($ligne-2)."-".$z[$i+2].($ligne-1);
 	# score
-	$h{$i+2}{$ligne+1}="=3*".$z[$i+2].($ligne-5)."+2*".$z[$i+2].($ligne-4)."+".$z[$i+2].($ligne-3);
+	$h{$i+2}{$ligne+1}="=4*".$z[$i+2].($ligne-5)."+2*".$z[$i+2].($ligne-4)."+".$z[$i+2].($ligne-3);
 	# rang
 	$h{$i+2}{$ligne+2}="=RANG(".$z[$i+2].($ligne+1).";B".($ligne+1).":".$z[$nb+1].($ligne+1).";0)";
     }
